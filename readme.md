@@ -24,9 +24,4 @@ If the user guesses the word, we display a winning message on the screen. If not
 - Allow user to chose from various categories
 - Add a Reset Button 
 
- display: flex;
-  justify-content: center;
-  color: #b020d4;
-  font-family: "Poppins", sans-serif;
-  padding-top: .5em;
-  font-size: 55px;
+ 

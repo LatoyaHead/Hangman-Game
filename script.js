@@ -14,16 +14,24 @@ const hangmanLeftArm= document.querySelector('.left-arm')
 const hangmanRightLeg= document.querySelector('.right-leg')
 const hangmanLeftLeg= document.querySelector('.left-leg')
 const resultText = document.getElementById('result-text')
-
+const container2 = document.querySelector('.container2')
+const letterContainer2 = document.getElementById('letter-container2')
+const optionsContainer2 = document.getElementById('options-container2')
+const userInputSection2 = document.getElementById('user-input-section2')
 
 player1Btn.addEventListener('click', function(){
-  let player1 = document.getElementById('player1Btn')
-  player1.classList.add('active')
+  if(player2Btn.classList.contains('mode2')){
+    player2Btn.classList.remove('mode2')
+  }
+  player1Btn.classList.add('active')
 })
 player2Btn.addEventListener('click', function(){
-  let player2 = document.getElementById('player2Btn')
-  player2.classList.add('active')
+  if(player1Btn.classList.contains('active')){
+    player1Btn.classList.remove('active')
+  }
+  player2Btn.classList.add('mode2')
 })
+
 
 //Options value for buttons
 let options = {
@@ -38,7 +46,8 @@ let count = 0
 let chosenWord = ""
 
 //Display option buttons
-const displayOptions = () => {
+const displayOptions = (shouldRunAgain) => {
+  if(shouldRunAgain) return //if this is TRUE leave the function
   player2Btn.disabled = false
   player1Btn.disabled = false
   optionsContainer.innerHTML += `<h3>Select A Category</h3>`;
@@ -67,12 +76,26 @@ const blocker = () => {
   newGameContainer.classList.remove("hide");
 };
 
+const displayLetters = (letterElement, userInputElement, optionValue) => {
+  letterElement.classList.remove("hide");
+  userInputElement.innerText = "";
+  let optionArray = options[optionValue];
+  chosenWord = optionArray[Math.floor(Math.random() * optionArray.length)];
+  chosenWord = chosenWord.toUpperCase();
+  let displayItem = chosenWord.replace(/./g, '<span class="dashes">_</span>')
+  userInputElement.innerHTML = displayItem;
+}
+
 //Word Generator
 const generateWord = (optionValue) => {
+  if(player2Btn.classList.contains('mode2')){ //displays letters for player 2 container
+    container2.style.display = 'block'
+    displayLetters(letterContainer2, userInputSection2, optionValue)
+  }
   console.log(optionValue);
   let optionsButtons = document.querySelectorAll(".options");
-  let h = document.querySelectorAll('h3')
-  h.forEach(elemH => elemH.style.display='none')
+  let headers = document.querySelectorAll('h3')
+  headers.forEach(elemH => elemH.style.display='none')
   //If optionValue matches the button innerText then highlight the button
   optionsButtons.forEach((button) => {
     if (button.innerText.toLowerCase() === optionValue.toLowerCase()) {
@@ -84,24 +107,12 @@ const generateWord = (optionValue) => {
     button.disabled = true;
   });
 
-  //initially hide letters, clear previous word
-  letterContainer.classList.remove("hide");
-  userInputSection.innerText = "";
 
-  let optionArray = options[optionValue];
-  //choose random word
-  chosenWord = optionArray[Math.floor(Math.random() * optionArray.length)];
-  chosenWord = chosenWord.toUpperCase();
-
-  //replace every letter with span containing dash
-  let displayItem = chosenWord.replace(/./g, '<span class="dashes">_</span>');
-
-  //Display each element as span
-  userInputSection.innerHTML = displayItem;
+  displayLetters(letterContainer, userInputSection, optionValue) //displays letters for Player 1 container
 };
 
 //Initial Function (Called when page loads/user presses new game)
-const initializer = () => {
+const initializer = (userInputSection, optionsContainer, letterContainer, shouldRunAgain) => {
   winCount = 0;
   count = 0;
 
@@ -156,31 +167,12 @@ const initializer = () => {
     letterContainer.append(button);
   }
 
-  displayOptions();
-  let { initialDrawing } = buildHangman();
-  //initialDrawing would draw the frame
-  initialDrawing();
+  displayOptions(shouldRunAgain);
 };
 
 //Canvas
 const buildHangman = () => {
-  // let context = canvas.getContext("2d");
-  // context.beginPath();
-  // context.strokeStyle = "#000";
-  // context.lineWidth = 2;
-
-  // //For drawing lines
-  // const drawLine = (fromX, fromY, toX, toY) => {
-  //   context.moveTo(fromX, fromY);
-  //   context.lineTo(toX, toY);
-  //   context.stroke();
-  // };
-
   const head = () => {
-    // context.beginPath();
-    // context.arc(70, 30, 10, 0, Math.PI * 2, true);
-    // context.stroke();
-    
     hangmanHead.style.display = 'block'
   };
 
@@ -204,21 +196,7 @@ const buildHangman = () => {
     hangmanRightLeg.style.display = 'block'
   };
 
-  //initial frame
-  const initialDrawing = () => {
-    // //clear canvas
-    // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    // //bottom line
-    // drawLine(10, 130, 130, 130);
-    // //left line
-    // drawLine(10, 10, 10, 131);
-    // //top line
-    // drawLine(10, 10, 70, 10);
-    // //small top line
-    // drawLine(70, 10, 70, 20);
-  };
-
-  return { initialDrawing, head, body, leftArm, rightArm, leftLeg, rightLeg };
+  return { head, body, leftArm, rightArm, leftLeg, rightLeg };
 };
 
 //draw the man
@@ -250,6 +228,6 @@ const drawMan = (count) => {
 
 //New Game
 newGameButton.addEventListener("click", initializer);
-window.onload = initializer;
-
+window.onload = initializer(userInputSection, optionsContainer, letterContainer);
+window.onload = initializer(userInputSection2, optionsContainer2, letterContainer2, true)
 

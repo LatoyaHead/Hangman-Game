@@ -71,15 +71,29 @@ body {
   background-color: transparent;
   width: 90vw;
   max-width: 34em;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
   padding: 1.5em;
   border-radius: 0.6em;
   box-shadow: 0 4px 10px 0 rgb(209, 209, 209);
   transition: 0.3s;
 }
+.container2 {
+  font-size: 16px;
+  background-color: transparent;
+  width: 90vw;
+  max-width: 34em;
+  padding: 1.5em;
+  border-radius: 0.6em;
+  box-shadow: 0 4px 10px 0 rgb(209, 209, 209);
+  transition: 0.3s;
+  display: none;
+}
+.parentContainer {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  gap: 50px;
+}
+
 #options-container {
   text-align: center;
 }
@@ -127,7 +141,22 @@ body {
   justify-content: center;
   gap: 0.6em;
 }
+.letter-container2 {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6em;
+}
 #letter-container button {
+  height: 2.4em;
+  width: 2.4em;
+  border-radius: 0.3em;
+  background-color: #b020d4;
+  color: whitesmoke;
+  border: none;
+}
+#letter-container2 button {
   height: 2.4em;
   width: 2.4em;
   border-radius: 0.3em;
@@ -164,6 +193,15 @@ body {
   font-size: 1.8em;
   margin: 0.6em 0 1.2em 0;
   gap: 10px;
+  color: whitesmoke;
+}
+#user-input-section2 {
+  display: flex;
+  justify-content: center;
+  font-size: 1.8em;
+  margin: 0.6em 0 1.2em 0;
+  gap: 10px;
+  color: whitesmoke;
 }
 canvas {
   display: block;
@@ -246,7 +284,7 @@ h3 {
 #player1Btn.active {
   background-color: orange;
 }
-#player2Btn.active {
+#player2Btn.mode2 {
   background-color: orange;
 }
 #mode-container :disabled {
