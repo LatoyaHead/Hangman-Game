@@ -49,8 +49,11 @@ let options = {
 
 //Count
 let winCount = 0
+let winCount2 = 0
 let count = 0
+let count2 = 0
 let chosenWord = ""
+let displayLettersCount = 0
 
 //Display option buttons
 const displayOptions = (shouldRunAgain) => {
@@ -84,14 +87,17 @@ const blocker = () => {
 };
 
 const displayLetters = (letterElement, userInputElement, optionValue, spanClass) => {
-  console.log(count);
+  console.log(displayLettersCount);
   letterElement.classList.remove("hide");
   userInputElement.innerText = "";
   let optionArray = options[optionValue];
-  chosenWord = optionArray[Math.floor(Math.random() * optionArray.length)];
+  if(displayLettersCount === 0){
+    chosenWord = optionArray[Math.floor(Math.random() * optionArray.length)];
+  }
   chosenWord = chosenWord.toUpperCase();
   let displayItem = chosenWord.replace(/./g, `<span class="${spanClass}">_</span>`) //regex pattern /./g replacing the dot
   userInputElement.innerHTML = displayItem;
+  displayLettersCount++
 }
 
 //Word Generator
@@ -102,7 +108,6 @@ const generateWord = (optionValue) => {
     category.textContent = `CATEGORY: ${optionValue}`
     category.style.display ='block'               
   }
-  console.log(optionValue);
   let optionsButtons = document.querySelectorAll(".options");
   let headers = document.querySelectorAll('h3')
   headers.forEach(elemH => elemH.style.display='none')
@@ -119,6 +124,57 @@ const generateWord = (optionValue) => {
 
   displayLetters(letterContainer, userInputSection, optionValue, 'dashes') //displays letters for Player 1 container
 };
+const correctAnswer = (charArray, dashes, button, event) => {
+  charArray.forEach((char, index) => {
+    //if character in array is same as clicked button
+    if (char === button.innerText) {
+      //replace dash with letter
+      dashes[index].innerText = char;
+      //increment counter
+      if (event.target.className === 'letters1'){
+        winCount2 += 1;
+        //if winCount equals word length
+        if (winCount2 == charArray.length) {
+          resultText.innerHTML = `<h2 class='win-msg'>You Win!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+          //block all buttons
+          blocker();
+        }
+      }else{
+        winCount += 1;
+      //if winCount equals word length
+      if (winCount == charArray.length) {
+        resultText.innerHTML = `<h2 class='win-msg'>You Win!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+        //block all buttons
+        blocker();
+      }
+      }
+      
+    }
+  });
+}
+
+const wrongAnswer = (event, chosenWord) => {
+  console.log('lose 1', count);
+  console.log('lose 2', count2);
+  if(event.target.className === 'letters1'){
+    count2 += 1
+    drawMan(count2, event);
+    //Count==6 because head,body,left arm, right arm,left leg,right leg
+  if (count2 == 6) {
+    resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+    blocker();
+  }
+  }else{
+    count += 1
+    drawMan(count, event);
+    //Count==6 because head,body,left arm, right arm,left leg,right leg
+  if (count == 6) {
+    resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+    blocker();
+  }
+  }
+}
+
 
 const createLetters = (letterContainer, buttonClass, spanClasses) => {
   for (let i = 65; i < 91; i++) {
@@ -132,31 +188,10 @@ const createLetters = (letterContainer, buttonClass, spanClasses) => {
       let dashes = document.getElementsByClassName(spanClasses);
       //if array contains clicked value replace the matched dash with letter else dram on canvas
       if (charArray.includes(button.innerText)) {
-        charArray.forEach((char, index) => {
-          //if character in array is same as clicked button
-          if (char === button.innerText) {
-            //replace dash with letter
-            dashes[index].innerText = char;
-            //increment counter
-            winCount += 1;
-            //if winCount equals word length
-            if (winCount == charArray.length) {
-              resultText.innerHTML = `<h2 class='win-msg'>You Win!!</h2><p>The word was <span>${chosenWord}</span></p>`;
-              //block all buttons
-              blocker();
-            }
-          }
-        });
+        correctAnswer(charArray, dashes, button, e)       
       } else {
         //lose count
-        count += 1;
-        //for drawing man
-        drawMan(count, e);
-        //Count==6 because head,body,left arm, right arm,left leg,right leg
-        if (count == 6) {
-          resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
-          blocker();
-        }
+        wrongAnswer(e, chosenWord)
       }
       //disable clicked button
       button.disabled = true;
@@ -192,7 +227,6 @@ const drawForSecondContainer = (event, bodyPart) => {
 
 //Canvas
 const buildHangman = (event) => {
-  console.log(event.target.className);
   const head = () => {
     if(drawForSecondContainer(event, hangmanHead1)) return 
     hangmanHead.style.display = 'block'
