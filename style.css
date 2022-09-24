@@ -109,6 +109,7 @@ body {
   width: 100%;
   flex-direction: column;
   align-items: center;
+  display: none;
 }
 #options-container .center.active {
   display: flex;
@@ -180,6 +181,7 @@ body {
 #options-container button.active:disabled {
   background-color: white;
   color: #000000;
+  display: none;
 }
 #options-container button:not(.active):disabled {
   display: none;
@@ -245,37 +247,37 @@ h3 {
   text-align: center;
   position: relative;
 }
-.head {
+.head, .head1 {
   position: absolute;
   top: 48px;
   left: 48%;
   display: none;
 }
-.body {
+.body, .body1 {
   position: absolute;
   top: 79px;
   left: 48%;
   display: none;
 }
-.right-arm {
+.right-arm, .right-arm1 {
   position: absolute;
   top: 73px;
   left: 53%;
   display: none;
 }
-.left-arm {
+.left-arm, .left-arm1 {
   position: absolute;
   top: 64px;
   left: 44%;
   display: none;
 }
-.right-leg {
+.right-leg, .right-leg1 {
   position: absolute;
   top: 123px;
   left: 50.5%;
   display: none;
 }
-.left-leg {
+.left-leg, .left-leg1 {
   position: absolute;
   top: 123px;
   left: 47%;
@@ -288,5 +290,11 @@ h3 {
   background-color: orange;
 }
 #mode-container :disabled {
+  display: none;
+}
+h2 {
+  color: whitesmoke;
+  text-align: center;
+  margin-bottom: 40px;
   display: none;
 }
