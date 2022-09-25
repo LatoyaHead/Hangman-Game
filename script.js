@@ -57,9 +57,12 @@ let displayLettersCount = 0
 
 //Display option buttons
 const displayOptions = (shouldRunAgain) => {
-  if(shouldRunAgain) return //if this is TRUE leave the function
+  if(shouldRunAgain && displayLettersCount === 0) return //if this is TRUE leave the function
   player2Btn.disabled = false
   player1Btn.disabled = false
+  optionsContainer.style.display = 'block'
+  let headers = document.querySelectorAll('h3')
+  headers.forEach(elemH => elemH.style.display='block')
   optionsContainer.innerHTML += `<h3>Select A Category</h3>`;
   let buttonCon = document.createElement("div");
   buttonCon.classList.add('center')
@@ -68,11 +71,28 @@ const displayOptions = (shouldRunAgain) => {
   }
   optionsContainer.appendChild(buttonCon);
 };
+const removeHangman = () => { //Built this function to remove hangman body parts
+  hangmanHead.style.display = 'none'
+  hangmanHead1.style.display = 'none'
+  hangmanBody.style.display = 'none'
+  hangmanBody1.style.display = 'none'
+  hangmanRightArm.style.display = 'none'
+  hangmanRightArm1.style.display = 'none'
+  hangmanLeftArm.style.display = 'none'
+  hangmanLeftArm1.style.display = 'none'
+  hangmanLeftLeg.style.display = 'none'
+  hangmanLeftLeg1.style.display = 'none'
+  hangmanRightLeg.style.display = 'none'
+  hangmanRightLeg1.style.display = 'none'
+} 
 
 //Block all the Buttons
 const blocker = () => {
   let optionsButtons = document.querySelectorAll(".options");
   let letterButtons = document.querySelectorAll(".letters");
+  let letterButtons1 = document.querySelectorAll(".letters1");
+  let headers = document.querySelectorAll('h2')
+  displayLettersCount = 0;
 
   //disable all options
   optionsButtons.forEach((button) => {
@@ -80,14 +100,22 @@ const blocker = () => {
   });
   //disable all letters
   letterButtons.forEach((button) => {
-    button.disabled.true;
+    button.disabled = true;
   });
+  letterButtons1.forEach((button) => {
+    button.disabled = true;
+  })
+  container2.style.display = 'none'
 
+  headers.forEach((header) => {
+    header.style.display = 'block'
+  })
+
+ removeHangman()
   newGameContainer.classList.remove("hide");
 };
 
 const displayLetters = (letterElement, userInputElement, optionValue, spanClass) => {
-  console.log(displayLettersCount);
   letterElement.classList.remove("hide");
   userInputElement.innerText = "";
   let optionArray = options[optionValue];
@@ -135,7 +163,7 @@ const correctAnswer = (charArray, dashes, button, event) => {
         winCount2 += 1;
         //if winCount equals word length
         if (winCount2 == charArray.length) {
-          resultText.innerHTML = `<h2 class='win-msg'>You Win!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+          resultText.innerHTML = `<h2 class='win-msg'>Player 2 Wins!!</h2><p>The word was <span>${chosenWord}</span></p>`;
           //block all buttons
           blocker();
         }
@@ -154,14 +182,12 @@ const correctAnswer = (charArray, dashes, button, event) => {
 }
 
 const wrongAnswer = (event, chosenWord) => {
-  console.log('lose 1', count);
-  console.log('lose 2', count2);
   if(event.target.className === 'letters1'){
     count2 += 1
     drawMan(count2, event);
     //Count==6 because head,body,left arm, right arm,left leg,right leg
   if (count2 == 6) {
-    resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+    resultText.innerHTML = `<h2 class='lose-msg'>Player 2 Lost!!</h2><p>The word was <span>${chosenWord}</span></p>`;
     blocker();
   }
   }else{
@@ -202,7 +228,9 @@ const createLetters = (letterContainer, buttonClass, spanClasses) => {
 //Initial Function (Called when page loads/user presses new game)
 const initializer = (userInputSection, optionsContainer, letterContainer, shouldRunAgain, buttonClass, spanClasses) => {
   winCount = 0;
+  winCount2 = 0;
   count = 0;
+  count2 = 0;
 
   //Initially erase all content and hide letters and new game button
   userInputSection.innerHTML = "";
@@ -288,7 +316,10 @@ const drawMan = (count, event) => {
 };
 
 //New Game
-newGameButton.addEventListener("click", initializer);
+newGameButton.addEventListener("click",() => {
+  initializer(userInputSection, optionsContainer, letterContainer, false, 'letters', 'dashes')
+  initializer(userInputSection2, optionsContainer2, letterContainer2, true, 'letters1', 'dashes2')
+});
 window.onload = initializer(userInputSection, optionsContainer, letterContainer, false, 'letters', 'dashes');
 window.onload = initializer(userInputSection2, optionsContainer2, letterContainer2, true, 'letters1', 'dashes2')
 
