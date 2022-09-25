@@ -6,7 +6,7 @@ const optionsContainer = document.getElementById('options-container')
 const userInputSection = document.getElementById('user-input-section')
 const newGameContainer = document.getElementById('new-game-container')
 const newGameButton = document.getElementById('new-game-button')
-// const canvas = document.getElementById('canvas')
+const playerTurnHeaders = document.querySelectorAll('h4')
 const hangmanHead= document.querySelector('.head')
 const hangmanBody= document.querySelector('.body')
 const hangmanRightArm= document.querySelector('.right-arm')
@@ -20,6 +20,7 @@ const hangmanLeftArm1= document.querySelector('.left-arm1')
 const hangmanRightLeg1= document.querySelector('.right-leg1')
 const hangmanLeftLeg1= document.querySelector('.left-leg1')
 const resultText = document.getElementById('result-text')
+const outerContainer = document.querySelector('.outer-container')
 const container2 = document.querySelector('.container2')
 const letterContainer2 = document.getElementById('letter-container2')
 const optionsContainer2 = document.getElementById('options-container2')
@@ -55,12 +56,14 @@ let count2 = 0
 let chosenWord = ""
 let displayLettersCount = 0
 
+
 //Display option buttons
 const displayOptions = (shouldRunAgain) => {
   if(shouldRunAgain && displayLettersCount === 0) return //if this is TRUE leave the function
   player2Btn.disabled = false
   player1Btn.disabled = false
   optionsContainer.style.display = 'block'
+  outerContainer.style.display = 'none'
   let headers = document.querySelectorAll('h3')
   headers.forEach(elemH => elemH.style.display='block')
   optionsContainer.innerHTML += `<h3>Select A Category</h3>`;
@@ -105,7 +108,8 @@ const blocker = () => {
   letterButtons1.forEach((button) => {
     button.disabled = true;
   })
-  container2.style.display = 'none'
+  outerContainer.style.display = 'none'
+  
 
   headers.forEach((header) => {
     header.style.display = 'block'
@@ -131,10 +135,11 @@ const displayLetters = (letterElement, userInputElement, optionValue, spanClass)
 //Word Generator
 const generateWord = (optionValue) => {
   if(player2Btn.classList.contains('mode2')){ //displays letters for player 2 container
-    container2.style.display = 'block'
+    outerContainer.style.display = 'block'
     displayLetters(letterContainer2, userInputSection2, optionValue, 'dashes2') 
     category.textContent = `CATEGORY: ${optionValue}`
-    category.style.display ='block'               
+    category.style.display ='block'
+    playerTurnHeaders[0].style.visibility = 'visible'               
   }
   let optionsButtons = document.querySelectorAll(".options");
   let headers = document.querySelectorAll('h3')
@@ -147,11 +152,16 @@ const generateWord = (optionValue) => {
       const buttonDivs = document.querySelector('.center')
       buttonDivs.classList.add('active')
     }
+    category.textContent = `CATEGORY: ${optionValue}`
+    category.style.display ='block'
     button.disabled = true;
   });
 
+  // outerContainer.style.display = 'none'
   displayLetters(letterContainer, userInputSection, optionValue, 'dashes') //displays letters for Player 1 container
 };
+
+//Correct Answer
 const correctAnswer = (charArray, dashes, button, event) => {
   charArray.forEach((char, index) => {
     //if character in array is same as clicked button
@@ -163,41 +173,57 @@ const correctAnswer = (charArray, dashes, button, event) => {
         winCount2 += 1;
         //if winCount equals word length
         if (winCount2 == charArray.length) {
-          resultText.innerHTML = `<h2 class='win-msg'>Player 2 Wins!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+          resultText.innerHTML = `<h2 class='win-msg'>PLAYER 2 WINS!! PLAYER 1 LOST!!!</h2><p>The word was <span>${chosenWord}</span></p>`;
           //block all buttons
           blocker();
         }
       }else{
         winCount += 1;
-      //if winCount equals word length
-      if (winCount == charArray.length) {
-        resultText.innerHTML = `<h2 class='win-msg'>You Win!!</h2><p>The word was <span>${chosenWord}</span></p>`;
-        //block all buttons
-        blocker();
+        //if winCount equals word length
+        if (winCount == charArray.length) {
+          if(player2Btn.classList.contains('mode2')) {
+            resultText.innerHTML = `<h2 class='lose-msg'>PLAYER 1 WINS!! PLAYER 2 LOST!!!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+            blocker();
+          }else {
+            resultText.innerHTML = `<h2 class='win-msg'>You Win!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+            //block all buttons
+            blocker();
+          }
+          
+        }
       }
-      }
-      
     }
   });
 }
 
+//WRONG
 const wrongAnswer = (event, chosenWord) => {
   if(event.target.className === 'letters1'){
+    playerTurnHeaders[0].style.visibility = 'visible'
+    playerTurnHeaders[1].style.visibility = 'hidden'
     count2 += 1
     drawMan(count2, event);
     //Count==6 because head,body,left arm, right arm,left leg,right leg
-  if (count2 == 6) {
-    resultText.innerHTML = `<h2 class='lose-msg'>Player 2 Lost!!</h2><p>The word was <span>${chosenWord}</span></p>`;
-    blocker();
-  }
+    if (count2 == 6) {
+      resultText.innerHTML = `<h2 class='lose-msg'>PLAYER 2 LOST!! PLAYER 1 WINS!!!!!!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+      blocker();
+    }   
   }else{
+    playerTurnHeaders[0].style.visibility = 'hidden'
+    playerTurnHeaders[1].style.visibility = 'visible'
     count += 1
     drawMan(count, event);
     //Count==6 because head,body,left arm, right arm,left leg,right leg
-  if (count == 6) {
-    resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
-    blocker();
-  }
+    if (count == 6) {
+      if(player2Btn.classList.contains('mode2')) {
+        resultText.innerHTML = `<h2 class='lose-msg'>PLAYER 1 LOSE!!!! PLAYER 2 WINS!!!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+        blocker();
+      }else {
+        resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+        blocker();
+      }
+
+    }
   }
 }
 
@@ -237,6 +263,9 @@ const initializer = (userInputSection, optionsContainer, letterContainer, should
   optionsContainer.innerHTML = "";
   letterContainer.classList.add("hide");
   newGameContainer.classList.add("hide");
+  playerTurnHeaders.forEach(h4 => {
+    h4.style.visibility = 'hidden'
+  }) 
   letterContainer.innerHTML = "";
 
   //For creating letter buttons

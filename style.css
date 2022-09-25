@@ -37,6 +37,11 @@ body {
   align-items: center;
   text-align: center;
 }
+@media (max-width: 700px){
+  .title {
+    font-size: 40px;
+  }
+}
 @keyframes textclip {
   to {
     background-position: 100% center;
@@ -59,6 +64,12 @@ body {
   justify-content: center;
   gap: 20px;
   width: 100%;
+}
+@media (max-width: 700px){
+  .modes {
+    flex-direction: column;
+    gap: 0px;
+  }
 }
 #mode-container {
   display: flex;
@@ -85,7 +96,7 @@ body {
   border-radius: 0.6em;
   box-shadow: 0 4px 10px 0 rgb(209, 209, 209);
   transition: 0.3s;
-  display: none;
+  display: block;
 }
 .parentContainer {
   display: flex;
@@ -93,7 +104,14 @@ body {
   align-content: center;
   gap: 50px;
 }
-
+@media (max-width: 1000px) {
+  .parentContainer {
+    flex-direction: column;
+  }
+  body {
+    background-size: cover;
+  }
+}
 #options-container {
   text-align: center;
 }
@@ -112,8 +130,15 @@ body {
   display: none;
 }
 #options-container .center.active {
-  display: flex;
+  display: none;
   justify-content: center;
+}
+@media (max-width: 700px){
+  #options-container .center {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
 }
 #options-container button {
   padding: 0.6em 1.2em;
@@ -157,12 +182,28 @@ body {
   color: whitesmoke;
   border: none;
 }
+#letter-container button:disabled {
+  height: 2.4em;
+  width: 2.4em;
+  border-radius: 0.3em;
+  background-color: #ccc;
+  color: black;
+  border: none;
+}
 #letter-container2 button {
   height: 2.4em;
   width: 2.4em;
   border-radius: 0.3em;
   background-color: #b020d4;
   color: whitesmoke;
+  border: none;
+}
+#letter-container2 button:disabled {
+  height: 2.4em;
+  width: 2.4em;
+  border-radius: 0.3em;
+  background-color: #ccc;
+  color: black;
   border: none;
 }
 .new-game-popup {
@@ -204,11 +245,6 @@ body {
   margin: 0.6em 0 1.2em 0;
   gap: 10px;
   color: whitesmoke;
-}
-canvas {
-  display: block;
-  margin: auto;
-  border: 1px solid #000000;
 }
 .hide {
   display: none;
@@ -297,4 +333,23 @@ h2 {
   text-align: center;
   margin-bottom: 40px;
   display: none;
+}
+h4 {
+  color: whitesmoke;
+  text-align: center;
+  margin-bottom: 20px;;
+}
+.firstOuterContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.outer-container {
+  flex-direction: column;
+  align-items: center;
+}
+@media (max-width: 1000px) {
+  .outer-container {
+    display: flex !important;
+  }
 }
