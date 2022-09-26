@@ -97,6 +97,7 @@ body {
   box-shadow: 0 4px 10px 0 rgb(209, 209, 209);
   transition: 0.3s;
   display: block;
+  margin: auto;
 }
 .parentContainer {
   display: flex;
@@ -182,6 +183,16 @@ body {
   color: whitesmoke;
   border: none;
 }
+@media (max-width: 700px) {
+  #letter-container button {
+    height: 4.4em;
+    width: 4.4em;
+  }
+  #letter-container button:disabled {
+    height: 4.4em !important;
+    width: 4.4em !important;
+  }
+}
 #letter-container button:disabled {
   height: 2.4em;
   width: 2.4em;
@@ -205,6 +216,16 @@ body {
   background-color: #ccc;
   color: black;
   border: none;
+}
+@media (max-width: 700px) {
+  #letter-container2 button {
+    height: 4.4em;
+    width: 4.4em;
+  }
+  #letter-container2 button:disabled {
+    height: 4.4em !important;
+    width: 4.4em !important;
+  }
 }
 .new-game-popup {
   background-color: #ffffff;
@@ -347,9 +368,4 @@ h4 {
 .outer-container {
   flex-direction: column;
   align-items: center;
-}
-@media (max-width: 1000px) {
-  .outer-container {
-    display: flex !important;
-  }
 }
